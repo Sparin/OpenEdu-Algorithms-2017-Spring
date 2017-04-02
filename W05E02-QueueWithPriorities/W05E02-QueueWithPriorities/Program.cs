@@ -42,7 +42,7 @@ namespace W05E02_QueueWithPriorities
     class QueueWithPriorities
     {
         public Dictionary<int, Element> References = new Dictionary<int, Element>();
-        public Element[] array = new Element[600000];
+        public Element[] array = new Element[6000000];
         public int HeapSize { get; private set; }
         public Element Top { get { return array[0]; } }
 
@@ -54,7 +54,7 @@ namespace W05E02_QueueWithPriorities
             {
                 Console.WriteLine(Top.Value);
                 HeapSize--;
-                array[0] = array[HeapSize];
+                Swap(0, HeapSize);
                 Heapify(0);
             }
         }
