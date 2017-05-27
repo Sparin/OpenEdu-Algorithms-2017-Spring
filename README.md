@@ -55,7 +55,12 @@ Full solutions on C# under MIT licence.
   </tr>
   <tr align="center">
     <td>6</td>
-    <td colspan=6>TBA</td>
+    <td><a href="https://github.com/Sparin/OpenEdu-Algorithms-2017-Spring/tree/master/W06E01-BinarySearch">BinarySearch</a></td>
+    <td><a href="https://github.com/Sparin/OpenEdu-Algorithms-2017-Spring/tree/master/W06E02-Garland">Garland</a></td>
+    <td><a href="https://github.com/Sparin/OpenEdu-Algorithms-2017-Spring/tree/master/W06E03-HeightOfTree">HeightOfTree</a></td>
+    <td><a href="https://github.com/Sparin/OpenEdu-Algorithms-2017-Spring/tree/master/W06E04-SubTreeRemover">SubTreeRemover</a></td>
+    <td>Checking</td>
+    <td></td>
   </tr>
   <tr align="center">
     <td>7</td>
