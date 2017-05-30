@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -16,13 +17,13 @@ namespace W07E01_Balance
             bool isCorrect = true;
             long N = long.Parse(stdin[0]);
             AvlTree<long>[] nodes = new AvlTree<long>[N];
+            List<AvlTree<long>> leafs = new List<AvlTree<long>>();
 
             //Parsing
             for (int i = 1; i <= N && isCorrect; i++)
             {
                 long[] args = stdin[i].Split(' ').Select(x => long.Parse(x)).ToArray();
-
-
+                
                 if (nodes[i - 1] == null)
                     nodes[i - 1] = new AvlTree<long>();
                 nodes[i - 1].Key = args[0];
@@ -40,6 +41,24 @@ namespace W07E01_Balance
                         nodes[args[2] - 1] = new AvlTree<long>() { Parent = nodes[i - 1] };
                     nodes[i - 1].Right = nodes[args[2] - 1];
                 }
+
+                //Calc Height
+                if (args[1] == 0 & args[2] == 0)
+                {
+                    AvlTree<long> leaf = nodes[i - 1];
+                    Stack<AvlTree<long>> temp = new Stack<AvlTree<long>>();
+                    while(leaf != null)
+                    {
+                        temp.Push(leaf);
+                        leaf = leaf.Parent;
+                    }
+                    while(temp.Count != 0)
+                    {
+                        leaf = temp.Pop();
+                        if (leaf.Height < temp.Count)
+                            leaf.Height = temp.Count;
+                    }
+                }
             }
 
             for (int i = 0; i < N; i++)
@@ -56,28 +75,21 @@ namespace W07E01_Balance
         public AvlTree<T> Left { get; set; }
         public AvlTree<T> Right { get; set; }
 
-        public static long Height(AvlTree<T> tree)
-        {
-            if (tree == null)
-                return -1;
-            long leftHeight = 0, rightHeight = 0;
-
-            if (tree.Left != null)
-                leftHeight = 1 + Height(tree.Left);
-            if (tree.Right != null)
-                rightHeight = 1 + Height(tree.Right);
-
-            if (leftHeight > rightHeight)
-                return leftHeight;
-            else
-                return rightHeight;
-        }
+        public long Height { get; set; }
 
         public static long GetBalance(AvlTree<T> tree)
         {
             if (tree == null)
                 throw new ArgumentNullException("tree");
-            return Height(tree.Right) - Height(tree.Left);
+
+            if (tree.Left != null && tree.Right != null)
+                return tree.Right.Height - tree.Left.Height;
+            if (tree.Left == null && tree.Right != null)
+                return tree.Right.Height + 1;
+            if (tree.Left != null && tree.Right == null)
+                return -1 - tree.Left.Height;
+            else
+                return 0;
         }
     }
 }
