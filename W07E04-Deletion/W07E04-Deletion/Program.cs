@@ -14,47 +14,19 @@ namespace W07E04_Deletion
             Console.SetOut(sw);
 
             string[] stdin = File.ReadAllLines("input.txt");
-            long N = long.Parse(stdin[0]);
-            AvlTree<long>[] nodes = new AvlTree<long>[N];
-
-            //Parsing
-            for (int i = 1; i <= N; i++)
-            {
-                long[] args = stdin[i].Split(' ').Select(x => long.Parse(x)).ToArray();
-
-                if (nodes[i - 1] == null)
-                    nodes[i - 1] = new AvlTree<long>();
-                nodes[i - 1].Key = args[0];
-                //Left child
-                if (args[1] != 0)
-                {
-                    if (nodes[args[1] - 1] == null)
-                        nodes[args[1] - 1] = new AvlTree<long>() { Parent = nodes[i - 1] };
-                    nodes[i - 1].Left = nodes[args[1] - 1];
-                }
-                //Right child
-                if (args[2] != 0)
-                {
-                    if (args[2] != 0 && nodes[args[2] - 1] == null)
-                        nodes[args[2] - 1] = new AvlTree<long>() { Parent = nodes[i - 1] };
-                    nodes[i - 1].Right = nodes[args[2] - 1];
-                }
-            }
+            int N = int.Parse(stdin[0]);
 
             AvlTree<long> root = null;
-            if (nodes.Length != 0)
+            for (int i = 1; i <=N; i++)
+                root = AvlTree<long>.Insert(root, new AvlTree<long> { Key = long.Parse(stdin[i].Split(' ')[0]) });
+
+            for(int i = N+1;i<stdin.Length;i++)
             {
-                root = nodes[0];
-                while (root.Parent != null)
-                    root = root.Parent;
+                AvlTree<long> node = AvlTree<long>.Search(root, long.Parse(stdin[i]));
+                if (node != null)
+                    root = AvlTree<long>.Remove(node);
             }
 
-            for (long i = N + 1; i < stdin.Length; i++)
-            {
-                AvlTree<long> item = AvlTree<long>.Search(root, long.Parse(stdin[i]));
-                if (item != null)
-                    root = AvlTree<long>.Remove(item);
-            }
             Console.WriteLine(N - (stdin.Length - 1 - N));
             AvlTree<long>.PrintTree(root);
 
@@ -70,6 +42,8 @@ namespace W07E04_Deletion
         public AvlTree<T> Right { get; set; }
 
         private long Depth { get; set; }
+        private long height = 0;
+        public long Height { get { return height; } set { height = value; } }
 
         public static AvlTree<T> Next(AvlTree<T> node)
         {
@@ -113,6 +87,8 @@ namespace W07E04_Deletion
                     parent.Left = null;
                 else
                     parent.Right = null;
+
+                UpdateHeight(parent);
                 return Balance(parent);
             }
 
@@ -121,10 +97,14 @@ namespace W07E04_Deletion
                 if (item.Left != null)
                 {
                     if (parent != null)
+                    {
                         if (parent.Left == item)
                             parent.Left = item.Left;
                         else
                             parent.Right = item.Left;
+
+                        UpdateHeight(parent);
+                    }
 
                     item.Left.Parent = parent;
                     return Balance(item.Left);
@@ -132,10 +112,15 @@ namespace W07E04_Deletion
                 else
                 {
                     if (parent != null)
+                    {
                         if (parent.Left == item)
                             parent.Left = item.Right;
                         else
                             parent.Right = item.Right;
+
+                        UpdateHeight(parent);
+                    }
+
                     item.Right.Parent = parent;
                     return Balance(item.Right);
                 }
@@ -170,7 +155,9 @@ namespace W07E04_Deletion
                     {
                         current.Right = node;
                         node.Parent = current;
-                        return Balance(node);
+                        UpdateHeight(node);
+                        return root;
+                        //return Balance(node);
                     }
                 }
                 else
@@ -181,9 +168,27 @@ namespace W07E04_Deletion
                     {
                         current.Left = node;
                         node.Parent = current;
-                        return Balance(node);
+                        UpdateHeight(node);
+                        return root;
+                        //return Balance(node);
                     }
                 }
+            }
+        }
+
+        private static void UpdateHeight(AvlTree<T> node)
+        {
+            while (node != null)
+            {
+                long rH = node.Right != null ? node.Right.Height : -1;
+                long lH = node.Left != null ? node.Left.Height : -1;
+                
+                if (rH > lH)
+                    node.Height = rH + 1;
+                else
+                    node.Height = lH + 1;
+
+                node = node.Parent;
             }
         }
 
@@ -227,29 +232,6 @@ namespace W07E04_Deletion
             return current;
         }
 
-        public static long Height(AvlTree<T> root)
-        {
-            if (root == null)
-                return -1;
-            Queue<AvlTree<T>> bfsQueue = new Queue<AvlTree<T>>();
-            long height = 0;
-            root.Depth = 0;
-            bfsQueue.Enqueue(root);
-            while (bfsQueue.Count != 0)
-            {
-                AvlTree<T> current = bfsQueue.Dequeue();
-                if (current != root)
-                    current.Depth = current.Parent.Depth + 1;
-                if (current.Depth > height)
-                    height = current.Depth;
-                if (current.Right != null)
-                    bfsQueue.Enqueue(current.Right);
-                if (current.Left != null)
-                    bfsQueue.Enqueue(current.Left);
-            }
-            return height;
-        }
-
         public static void PrintTree(AvlTree<T> root)
         {
             if (root == null)
@@ -283,9 +265,16 @@ namespace W07E04_Deletion
         public static long GetBalance(AvlTree<T> tree)
         {
             if (tree == null)
-                throw new ArgumentNullException("tree");
+                return 0;
 
-            return Height(tree.Right) - Height(tree.Left);
+            if (tree.Left != null && tree.Right != null)
+                return tree.Right.Height - tree.Left.Height;
+            if (tree.Left == null && tree.Right != null)
+                return tree.Right.Height + 1;
+            if (tree.Left != null && tree.Right == null)
+                return -1 - tree.Left.Height;
+            else
+                return 0;
         }
 
         /// <returns>Root of tree after turn</returns>
@@ -318,6 +307,21 @@ namespace W07E04_Deletion
                 else
                     parent.Left = child;
 
+            //Heights
+            long xH = x != null ? x.Height : -1;
+            long yH = y != null ? y.Height : -1;
+            long zH = z != null ? z.Height : -1;
+
+            if (xH > yH)
+                root.Height = xH + 1;
+            else
+                root.Height = yH + 1;
+            if (root.Height > zH)
+                child.Height = root.Height + 1;
+            else
+                child.Height = zH + 1;
+
+            UpdateHeight(child);
             return child;
         }
 
@@ -351,6 +355,22 @@ namespace W07E04_Deletion
                 else
                     parent.Left = child;
 
+            //Heights
+            long xH = x != null ? x.Height : -1;
+            long yH = y != null ? y.Height : -1;
+            long zH = z != null ? z.Height : -1;
+
+            if (zH > xH)
+                root.Height = zH + 1;
+            else
+                root.Height = xH + 1;
+
+            if (y.Height > root.Height)
+                child.Height = yH + 1;
+            else
+                child.Height = root.Height + 1;
+
+            UpdateHeight(child);
             return child;
         }
 
@@ -391,6 +411,28 @@ namespace W07E04_Deletion
             root.Left = y;
             root.Right = w;
 
+            //Heights
+            long xH = x != null ? x.Height : -1;
+            long yH = y != null ? y.Height : -1;
+            long zH = z != null ? z.Height : -1;
+            long wH = w != null ? w.Height : -1;
+
+            if (zH > xH)
+                b.Height = zH + 1;
+            else
+                b.Height = xH + 1;
+
+            if (yH > wH)
+                root.Height = yH + 1;
+            else
+                root.Height = wH + 1;
+
+            if (b.Height > root.Height)
+                c.Height = b.Height + 1;
+            else
+                c.Height = root.Height + 1;
+
+            UpdateHeight(c);
             return c;
         }
 
@@ -431,6 +473,28 @@ namespace W07E04_Deletion
             root.Left = w;
             root.Right = x;
 
+            //Heights
+            long xH = x != null ? x.Height : -1;
+            long yH = y != null ? y.Height : -1;
+            long zH = z != null ? z.Height : -1;
+            long wH = w != null ? w.Height : -1;
+
+            if (wH > yH)
+                root.Height = wH + 1;
+            else
+                root.Height = xH + 1;
+
+            if (yH > zH)
+                b.Height = yH + 1;
+            else
+                b.Height = zH + 1;
+
+            if (b.Height > root.Height)
+                c.Height = b.Height + 1;
+            else
+                c.Height = root.Height + 1;
+
+            UpdateHeight(c);
             return c;
         }
     }
