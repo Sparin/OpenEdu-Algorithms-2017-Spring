@@ -54,9 +54,7 @@ namespace W07E05_AvlSet
         public AvlTree<T> Left { get; set; }
         public AvlTree<T> Right { get; set; }
 
-        private long Depth { get; set; }
-        private long height = 0;
-        public long Height { get { return height; } set { height = value; } }
+        public long Height { get; set; }
 
         public static AvlTree<T> Next(AvlTree<T> node)
         {
@@ -142,7 +140,7 @@ namespace W07E05_AvlSet
             //Two child
             if ((item.Left != null) && (item.Right != null))
             {
-                AvlTree<T> prev = Previous(item);                
+                AvlTree<T> prev = Previous(item);
                 Remove(prev);
                 item.Key = prev.Key;
             }
@@ -189,8 +187,7 @@ namespace W07E05_AvlSet
 
         private static void UpdateHeight(AvlTree<T> node)
         {
-            bool noChanges = false;
-            while (node != null)// && !noChanges)
+            while (node != null)
             {
                 long rH = node.Right != null ? node.Right.Height : -1;
                 long lH = node.Left != null ? node.Left.Height : -1;
@@ -201,7 +198,6 @@ namespace W07E05_AvlSet
                 else
                     node.Height = lH + 1;
 
-                noChanges = currentH == node.Height;
                 node = node.Parent;
             }
         }
@@ -493,7 +489,7 @@ namespace W07E05_AvlSet
             long zH = z != null ? z.Height : -1;
             long wH = w != null ? w.Height : -1;
 
-            if (wH > yH)
+            if (wH > xH)
                 root.Height = wH + 1;
             else
                 root.Height = xH + 1;
