@@ -64,7 +64,12 @@ Full solutions on C# under MIT licence.
   </tr>
   <tr align="center">
     <td>7</td>
-    <td colspan=6>TBA</td>
+    <td><a href="https://github.com/Sparin/OpenEdu-Algorithms-2017-Spring/tree/master/W07E01-Balance">Balance</a></td>
+    <td><a href="https://github.com/Sparin/OpenEdu-Algorithms-2017-Spring/tree/master/W07E02-Rotation">Rotation</a></td>
+    <td><a href="https://github.com/Sparin/OpenEdu-Algorithms-2017-Spring/tree/master/W07E03-Addition">Addition</a></td>
+    <td><a href="https://github.com/Sparin/OpenEdu-Algorithms-2017-Spring/tree/master/W07E04-Deletion">Deletion</a></td>
+    <td>AvlSet</td>
+    <td></td>
   </tr>
   <tr align="center">
     <td>8</td>
