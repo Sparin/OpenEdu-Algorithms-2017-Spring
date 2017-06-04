@@ -478,7 +478,7 @@ namespace W07E03_Addition
             long zH = z != null ? z.Height : -1;
             long wH = w != null ? w.Height : -1;
 
-            if (wH > yH)
+            if (wH > xH)
                 root.Height = wH + 1;
             else
                 root.Height = xH + 1;

@@ -171,8 +171,7 @@ namespace W07E02_Rotation
 
         private static void UpdateHeight(AvlTree<T> node)
         {
-            bool noChanges = false;
-            while (node != null && !noChanges)
+            while (node != null)
             {
                 long rH = node.Right != null ? node.Right.Height : -1;
                 long lH = node.Left != null ? node.Left.Height : -1;
@@ -183,7 +182,6 @@ namespace W07E02_Rotation
                 else
                     node.Height = lH + 1;
 
-                noChanges = currentH == node.Height && !(rH == -1 && lH == -1);
                 node = node.Parent;
             }
         }
@@ -475,7 +473,7 @@ namespace W07E02_Rotation
             long zH = z != null ? z.Height : -1;
             long wH = w != null ? w.Height : -1;
 
-            if (wH > yH)
+            if (wH > xH)
                 root.Height = wH + 1;
             else
                 root.Height = xH + 1;
