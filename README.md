@@ -68,7 +68,7 @@ Full solutions on C# under MIT licence.
     <td><a href="https://github.com/Sparin/OpenEdu-Algorithms-2017-Spring/tree/master/W07E02-Rotation">Rotation</a></td>
     <td><a href="https://github.com/Sparin/OpenEdu-Algorithms-2017-Spring/tree/master/W07E03-Addition">Addition</a></td>
     <td><a href="https://github.com/Sparin/OpenEdu-Algorithms-2017-Spring/tree/master/W07E04-Deletion">Deletion</a></td>
-    <td>AvlSet</td>
+    <td><a href="https://github.com/Sparin/OpenEdu-Algorithms-2017-Spring/tree/master/W07E05-AvlSet">AvlSet</a></td>
     <td></td>
   </tr>
   <tr align="center">
